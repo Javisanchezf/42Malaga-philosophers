@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/28 14:36:26 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/04/28 15:07:02 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ t_rules	extract_data(int narg, char **argv, short int *ends, short int *dead)
 
 	*ends = 0;
 	*dead = 0;
+	rules.philo = 0;
 	rules.time_dead = ft_atoi(argv[2]);
 	rules.time_eat = ft_atoi(argv[3]);
 	rules.time_sleep = ft_atoi(argv[4]);
