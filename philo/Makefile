@@ -6,7 +6,7 @@
 #    By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/24 17:38:03 by javiersa          #+#    #+#              #
-#    Updated: 2023/04/24 17:59:14 by javiersa         ###   ########.fr        #
+#    Updated: 2023/04/28 14:26:13 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -Wall -Werror -Wextra -pthread
 PERSONALNAME = Philosophers
 CC = gcc
 CLEAN = rm -Rf
-SRC = philo.c
+SRC = main.c ft_error.c philo_utils.c
 
 OBJS := $(SRC:.c=.o)
 
@@ -73,3 +73,4 @@ WHITE	:= \033[37;1m
 DEFAULT	:= \033[0m
 
 .PHONY : all clean fclean re bonus git gitignore submodules 42prepare .c.o
+
