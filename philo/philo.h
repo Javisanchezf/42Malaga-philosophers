@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/28 15:12:38 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/04/28 21:04:17 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,29 @@
 ◦[4] Time to sleep (milliseconds)\n \
 ◦[5] Number of times each philosopher must eat (OPTIONAL)")
 
-typedef struct	rules
+typedef struct	data
 {
-	int		philo;
-	int		time_dead;
-	int		time_eat;
-	int		time_sleep;
-	int		n_eats;
+	unsigned int	n_philos;
+	unsigned int	time_dead;
+	unsigned int	time_eat;
+	unsigned int	time_sleep;
+	unsigned int	n_eats;
 	short int		*ends;
-	short int		*stop;
-}				t_rules;
+	short int		*stop; //Cuando finalice *stop = 0;
+}				t_data;
+
+typedef struct	philo
+{
+	unsigned int		id;
+	pthread_t			thread;
+	pthread_mutex_t		fork_r;
+	pthread_mutex_t		*fork_l;
+	t_data				*data;
+}				t_philos;
+
 
 void	ft_error(char *prompt, int num_args, ...);
-int		ft_atoi(const char *str);
+unsigned int		ft_atoui(const char *str);
+void	ft_multiple_free(int num_args, ...);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:41:26 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/28 12:45:26 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/04/28 21:04:10 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,6 @@ int	ft_free_and_null(void **ptr)
 	return (0);
 }
 
-// void	ft_multiple_free(int num_args, ...)
-// {
-// 	va_list	args;
-// 	void	*ptr;
-// 	int		i;
-
-// 	i = -1;
-// 	va_start(args, num_args);
-// 	while (++i < num_args)
-// 	{
-// 		ptr = va_arg(args, void *);
-// 		ft_free_and_null((void **)&ptr);
-// 	}
-// 	va_end(args);
-// }
-
 void	ft_putstr_fd(char *s, int fd)
 {
 	int	i;
@@ -48,6 +32,22 @@ void	ft_putstr_fd(char *s, int fd)
 		write (fd, &s[i], sizeof(char));
 		i++;
 	}
+}
+
+void	ft_multiple_free(int num_args, ...)
+{
+	va_list	args;
+	void	*ptr;
+	int		i;
+
+	i = -1;
+	va_start(args, num_args);
+	while (++i < num_args)
+	{
+		ptr = va_arg(args, void *);
+		ft_free_and_null((void **)&ptr);
+	}
+	va_end(args);
 }
 
 void	ft_error(char *prompt, int num_args, ...)
