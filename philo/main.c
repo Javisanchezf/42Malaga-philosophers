@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/29 14:02:17 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/04/29 17:18:48 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_data	parse_data(int narg, char **argv)
 	if (!data.stop)
 		ft_error("Error allocating memory.", 1, data.ends);
 	*(data.ends) = 0;
-	*(data.stop) = 1;
+	*(data.stop) = 0;
 	data.n_philos = ft_atoui(argv[1]);
 	data.time_dead = ft_atoui(argv[2]);
 	data.time_eat = ft_atoui(argv[3]);
@@ -53,52 +53,17 @@ t_data	parse_data(int narg, char **argv)
 	return(data); 
 }
 
-// void *philo_do(void *arg)
-// {
-// 	t_philos	*philo;
-
-// 	philo = (t_philos *)arg;
-// 	// printf("Philosopher %d data:\n", philo->id);
-// 	// printf("n_philos: %u\n", philo->data->n_philos);
-// 	// printf("time_dead: %u\n", philo->data->time_dead);
-// 	// printf("time_eat: %u\n", philo->data->time_eat);
-// 	// printf("time_sleep: %u\n", philo->data->time_sleep);
-// 	// printf("n_eats: %u\n", philo->data->n_eats);
-// 	// printf("ends: %p\n", philo->data->ends);
-// 	// printf("stop: %p\n", philo->data->stop);
-// 	// printf("ends: %hd\n", *(philo->data->ends));
-// 	// printf("stop: %hd\n", *(philo->data->stop));
-// 	if (philo->state == 1 && *(philo->data->stop))
-// 	{
-// 		printf("Philo %d is sleaping.\n", philo->id);
-// 		usleep(philo->data->time_sleep);
-// 	}
-// 	int i = 0;
-// 	while (*(philo->data->stop) && ++i < 10)
-// 	{
-// 		pthread_mutex_lock(&philo->fork_r);
-// 		pthread_mutex_lock(philo->fork_l);
-// 		if (*(philo->data->stop))
-// 			printf("Philo %d is eating.\n", philo->id);
-// 		usleep(philo->data->time_eat);
-// 		pthread_mutex_unlock(&philo->fork_r);
-// 		pthread_mutex_unlock(philo->fork_l);
-// 		if (*(philo->data->stop))
-// 		{
-// 			printf("Philo %d is sleaping.\n", philo->id);
-// 			usleep(philo->data->time_sleep);
-// 		}
-// 	}
-// 	pthread_exit(NULL);
-// }
-
 void *philo_right_handed(void *arg)
 {
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	while (!*(philo->data->stop)) //Para esperar a que se creen todos los filos
+		usleep(1);
+	gettimeofday(&philo->last_meal, NULL);
+    printf("%d Tiempo transcurrido: %ld microsegundos\n", philo->id,philo->last_meal.tv_usec - philo->data->time_start.tv_usec);
 	int i = 0;
-	while (*(philo->data->stop) && ++i < 10)
+	while (*(philo->data->stop) && ++i < 2)
 	{
 		pthread_mutex_lock(&philo->fork_r);
 		pthread_mutex_lock(philo->fork_l);
@@ -122,6 +87,9 @@ void *philo_left_handed(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	while (!*(philo->data->stop))
+		usleep(1);
+	gettimeofday(&philo->last_meal, NULL);
 	int i = 0;
 	while (*(philo->data->stop) && ++i < 10)
 	{
@@ -185,6 +153,7 @@ t_philos	*philo_born(t_data *data)
 	}
 	philo[0].fork_l = &philo[i - 1].fork_r;
 	i = -1;
+	// gettimeofday(&data->time_start, NULL);
 	while (++i < data->n_philos)
 	{
 		if (philo[i].id % 2 == 1)
@@ -194,6 +163,10 @@ t_philos	*philo_born(t_data *data)
 			if (pthread_create(&philo[i].thread, NULL, philo_left_handed, &philo[i]))
 				ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 	}
+	gettimeofday(&data->time_start, NULL);
+	*(philo->data->stop) = 1;
+	printf("ALL PHILOS BORN\n");
+	usleep(2);
 	return(philo);
 }
 
@@ -210,8 +183,8 @@ int	main(int narg, char **argv)
 	atexit(ft_leaks);
 	data = parse_data(narg, argv);
 	philos = philo_born(&data);
-	// usleep(1000000);
-	// *(data.stop) = 0;
+	long microseconds =philos[0].last_meal.tv_usec;
+    printf("Tiempo transcurrido: %ld microsegundos\n", microseconds - data.time_start.tv_usec);
 	close_and_clean(philos);
 	return(0);
 }
