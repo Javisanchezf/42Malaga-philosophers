@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/28 21:04:17 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/04/29 13:41:35 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdarg.h>
 # include <unistd.h>
 # include <pthread.h>
+#include <sys/time.h>
 
 # define INSTRUCTIONS ("Invalid number of arguments, variables:\n \
 ◦[1] Number of philosophers \n \
