@@ -6,26 +6,13 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/30 00:05:25 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/04/29 23:23:18 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 	// pthread_mutex_t		startmutex;
-
-void	printf_mutex(char *str, t_philos *philo)
-{
-	struct timeval		actual_time;
-	long				time;
-
-	pthread_mutex_lock(&philo->data->talk);
-	gettimeofday(&actual_time, NULL);
-	time = (actual_time.tv_sec - philo->data->time_start.tv_sec);
-	time = ((time * 1000000) + actual_time.tv_usec) - (philo->data->time_start.tv_usec);
-	printf("(%ld) Philo %d %s\n", time, philo->id, str);
-	pthread_mutex_unlock(&philo->data->talk);
-}
 
 void	check_args(int narg, char **argv)
 {
@@ -73,25 +60,28 @@ void *philo_right_handed(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	// while (!*(philo->data->stop)) //Para esperar a que se creen todos los filos
+	// 	usleep(1);
 	// pthread_mutex_lock(&startmutex);
 	// pthread_mutex_unlock(&startmutex);
 	gettimeofday(&philo->last_meal, NULL);
+    printf("%d Tiempo transcurrido: %ld microsegundos\n", philo->id,philo->last_meal.tv_usec - philo->data->time_start.tv_usec);
 	int i = 0;
-	while (*(philo->data->stop) && ++i < 3)
+	while (*(philo->data->stop) && ++i < 2)
 	{
 		pthread_mutex_lock(&philo->fork_r);
 		pthread_mutex_lock(philo->fork_l);
 		if (*(philo->data->stop))
-			printf_mutex("is eating.", philo);
+			printf("Philo %d is eating.\n", philo->id);
 		usleep(philo->data->time_eat);
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
 		if (*(philo->data->stop))
 		{
-			printf_mutex("is sleaping.", philo);
+			printf("Philo %d is sleaping.\n", philo->id);
 			usleep(philo->data->time_sleep);
 		}
-		printf_mutex("is thinking.", philo);
+		printf("Philo %d is thinking.\n", philo->id);
 	}
 	pthread_exit(NULL);
 }
@@ -101,27 +91,27 @@ void *philo_left_handed(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	// while (!*(philo->data->stop))
+	// 	usleep(1);
 	// pthread_mutex_lock(&startmutex);
 	// pthread_mutex_unlock(&startmutex);
 	gettimeofday(&philo->last_meal, NULL);
 	int i = 0;
-	printf_mutex("is sleaping.", philo);
-	usleep(philo->data->time_sleep);
-	while (*(philo->data->stop) && ++i < 3)
+	while (*(philo->data->stop) && ++i < 10)
 	{
-		pthread_mutex_lock(&philo->fork_r);
-		pthread_mutex_lock(philo->fork_l);
-		if (*(philo->data->stop))
-			printf_mutex("is eating.", philo);
-		usleep(philo->data->time_eat);
-		pthread_mutex_unlock(&philo->fork_r);
-		pthread_mutex_unlock(philo->fork_l);
+		printf("Philo %d is sleaping.\n", philo->id);
+		usleep(philo->data->time_sleep);
 		if (*(philo->data->stop))
 		{
-			printf_mutex("is sleaping.", philo);
-			usleep(philo->data->time_sleep);
+			printf("Philo %d is thinking.\n", philo->id);
+			pthread_mutex_lock(philo->fork_l);
+			pthread_mutex_lock(&philo->fork_r);
+			if (*(philo->data->stop))
+				printf("Philo %d is eating.\n", philo->id);
+			usleep(philo->data->time_eat);
+			pthread_mutex_unlock(&philo->fork_r);
+			pthread_mutex_unlock(philo->fork_l);
 		}
-		printf_mutex("is thinking.", philo);
 	}
 	pthread_exit(NULL);
 }
@@ -181,6 +171,8 @@ t_philos	*philo_born(t_data *data)
 				ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 	}
 	// gettimeofday(&data->time_start, NULL);
+	// *(philo->data->stop) = 1;
+	// printf("ALL PHILOS BORN\n");
 	// pthread_mutex_unlock(&startmutex);
 	usleep(2);
 	return(philo);
@@ -199,6 +191,8 @@ int	main(int narg, char **argv)
 	atexit(ft_leaks);
 	data = parse_data(narg, argv);
 	philos = philo_born(&data);
+	long microseconds =philos[0].last_meal.tv_usec;
+    printf("Tiempo transcurrido: %ld microsegundos\n", microseconds - data.time_start.tv_usec);
 	close_and_clean(philos);
 	return(0);
 }

@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/29 16:43:50 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/04/29 23:28:27 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct	data
 	short int		*ends;
 	short int		*stop; //Cuando finalice *stop = 0;
 	struct timeval	time_start;
+	pthread_mutex_t	talk;
 }				t_data;
 
 typedef struct	philo
