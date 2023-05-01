@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/04/29 23:28:27 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/01 19:20:26 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,15 @@ typedef struct	data
 	unsigned int	n_eats;
 	short int		*ends;
 	short int		*stop; //Cuando finalice *stop = 0;
-	struct timeval	time_start;
+	long			time_start;
 	pthread_mutex_t	talk;
+	pthread_t		starvation;
 }				t_data;
 
 typedef struct	philo
 {
 	unsigned int		id;
-	struct timeval		last_meal;
+	long				last_meal;
 	pthread_t			thread;
 	pthread_mutex_t		fork_r;
 	pthread_mutex_t		*fork_l;
