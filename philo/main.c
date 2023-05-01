@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/02 00:24:18 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/02 01:02:46 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,16 @@ void	*check_starvation(void	*param)
 		ft_usleep(1);
 		while (++i < philo->data->n_philos)
 		{
+			pthread_mutex_lock(&philo[i].mutex_eat);
 			time = timer() - philo[i].last_meal;
 			if (time >= philo->data->time_dead)
 			{
 				*(philo->data->stop) = 0;
+				pthread_mutex_unlock(&philo[i].mutex_eat);
 				printf("(%ld) Philo %d is dead.\n", timer() - philo->data->time_start, philo->id);
 				return (NULL);
 			}
+			pthread_mutex_unlock(&philo[i].mutex_eat);
 		}
 	}
 	return (NULL);
@@ -120,8 +123,10 @@ void	*philo_right_handed(void *arg)
 		printf_mutex("has taken the right fork.", philo);
 		pthread_mutex_lock(philo->fork_l);
 		printf_mutex("has taken the left fork.", philo);
+		pthread_mutex_lock(&philo->mutex_eat);
 		printf_mutex("is eating.", philo);
 		philo->last_meal = timer();
+		pthread_mutex_unlock(&philo->mutex_eat);
 		ft_usleep(philo->data->time_eat);
 		pthread_mutex_unlock(philo->fork_l);
 		pthread_mutex_unlock(&philo->fork_r);
@@ -143,8 +148,10 @@ void	*philo_left_handed(void *arg)
 		printf_mutex("has taken the left fork.", philo);
 		pthread_mutex_lock(&philo->fork_r);
 		printf_mutex("has taken the right fork.", philo);
+		pthread_mutex_lock(&philo->mutex_eat);
 		printf_mutex("is eating.", philo);
 		philo->last_meal = timer();
+		pthread_mutex_unlock(&philo->mutex_eat);
 		ft_usleep(philo->data->time_eat);
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
@@ -165,7 +172,11 @@ void	close_and_clean(t_philos *philo)
 	pthread_join(philo->data->starvation, NULL);
 	i = -1;
 	while (++i < philo->data->n_philos)
+	{
 		pthread_mutex_destroy(&philo[i].fork_r);
+		pthread_mutex_destroy(&philo[i].mutex_eat);
+	}
+	pthread_mutex_destroy(&philo->data->talk);
 	ft_multiple_free(3, philo, philo->data->stop, philo->data->ends);
 }
 
@@ -194,6 +205,8 @@ t_philos	*philo_born(t_data *data)
 		philo[i].last_meal = timer();
 		philo[i].data = data;
 		if (pthread_mutex_init(&philo[i].fork_r, NULL))
+			ft_error("Error creating thread", 1, philo);
+		if (pthread_mutex_init(&philo[i].mutex_eat, NULL))
 			ft_error("Error creating thread", 1, philo);
 		if (i != 0)
 			philo[i].fork_l = &philo[i - 1].fork_r;

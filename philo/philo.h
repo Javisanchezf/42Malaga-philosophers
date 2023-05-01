@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/01 22:09:03 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/02 00:47:53 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	philo
 	pthread_t			thread;
 	pthread_mutex_t		fork_r;
 	pthread_mutex_t		*fork_l;
+	pthread_mutex_t		mutex_eat;
 	t_data				*data;
 }				t_philos;
 
