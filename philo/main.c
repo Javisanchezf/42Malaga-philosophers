@@ -6,13 +6,14 @@
 /*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/01 20:31:05 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/01 22:13:11 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	timer(void)
+
+useconds_t	timer(void)
 {
 	struct timeval	actual_time;
 
@@ -20,39 +21,49 @@ long	timer(void)
 	return ((actual_time.tv_sec * 1000) + (actual_time.tv_usec / 1000));
 }
 
+void	ft_usleep(useconds_t ms)
+{
+	useconds_t	time;
+
+	time = timer();
+	while (timer() - time < ms)
+		usleep(ms / 10);
+}
 
 void	printf_mutex(char *str, t_philos *philo)
 {
-	long				time;
+	useconds_t				time;
 
 	pthread_mutex_lock(&philo->data->talk);
 	time = timer() - philo->data->time_start;
-	printf("(%ld) Philo %d %s\n", time, philo->id, str);
+	if (*(philo->data->stop))
+		printf("(%u) Philo %d %s\n", time, philo->id, str);
 	pthread_mutex_unlock(&philo->data->talk);
 }
 
-void	*check_starvation(void	*param)
-{
-	unsigned int	i;
-	t_philos		*philo;
+// void	*check_starvation(void	*param)
+// {
+// 	unsigned int	i;
+// 	t_philos		*philo;
 
-	philo = (t_philos *)param;
-	while (*(philo->data->stop))
-	{
-		i = -1;
-		usleep(999);
-		while (++i < philo->data->n_philos)
-		{
-			if (timer() - philo[i].last_meal >= philo->data->time_dead)
-			{
-				*(philo->data->stop) = 0;
-				printf_mutex("is dead.", &philo[i]);
-				return (NULL);
-			}
-		}
-	}
-	return (NULL);
-}
+// 	philo = (t_philos *)param;
+// 	i = -1;
+// 	while (*(philo->data->stop))
+// 	{
+// 		i = -1;
+// 		ft_usleep(philo->data->time_dead);
+// 		while (++i < philo->data->n_philos)
+// 		{
+// 			if (timer() - philo[i].last_meal >= philo->data->time_dead)
+// 			{
+// 				*(philo->data->stop) = 0;
+// 				printf("(%ld) Philo %d is dead.\n", timer() - philo->data->time_start, philo->id);
+// 				return (NULL);
+// 			}
+// 		}
+// 	}
+// 	return (NULL);
+// }
 
 void	check_args(int narg, char **argv)
 {
@@ -86,8 +97,8 @@ t_data	parse_data(int narg, char **argv)
 	*(data.stop) = 1;
 	data.n_philos = ft_atoui(argv[1]);
 	data.time_dead = ft_atoui(argv[2]);
-	data.time_eat = ft_atoui(argv[3]) * 1000;
-	data.time_sleep = ft_atoui(argv[4]) * 1000;
+	data.time_eat = ft_atoui(argv[3]);
+	data.time_sleep = ft_atoui(argv[4]);
 	if (narg == 6)
 	{
 		*(data.ends) = 1;
@@ -101,24 +112,20 @@ void	*philo_right_handed(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	philo->last_meal = timer();
 	while (*(philo->data->stop))
 	{
 		pthread_mutex_lock(&philo->fork_r);
+		printf_mutex("has taken the right fork.", philo);
 		pthread_mutex_lock(philo->fork_l);
+		printf_mutex("has taken the left fork.", philo);
+		printf_mutex("is eating.", philo);
 		philo->last_meal = timer();
-		if (*(philo->data->stop))
-			printf_mutex("is eating.", philo);
-		usleep(philo->data->time_eat);
-		pthread_mutex_unlock(&philo->fork_r);
+		ft_usleep(philo->data->time_eat);
 		pthread_mutex_unlock(philo->fork_l);
-		if (*(philo->data->stop))
-		{
-			printf_mutex("is sleaping.", philo);
-			usleep(philo->data->time_sleep);
-		}
-		if (*(philo->data->stop))
-			printf_mutex("is thinking.", philo);
+		pthread_mutex_unlock(&philo->fork_r);
+		printf_mutex("is sleaping.", philo);
+		ft_usleep(philo->data->time_sleep);
+		printf_mutex("is thinking.", philo);
 	}
 	pthread_exit(NULL);
 }
@@ -128,24 +135,20 @@ void	*philo_left_handed(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	philo->last_meal = timer();
 	while (*(philo->data->stop))
 	{
-		pthread_mutex_lock(&philo->fork_r);
 		pthread_mutex_lock(philo->fork_l);
+		printf_mutex("has taken the left fork.", philo);
+		pthread_mutex_lock(&philo->fork_r);
+		printf_mutex("has taken the right fork.", philo);
+		printf_mutex("is eating.", philo);
 		philo->last_meal = timer();
-		if (*(philo->data->stop))
-			printf_mutex("is eating.", philo);
-		usleep(philo->data->time_eat);
+		ft_usleep(philo->data->time_eat);
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
-		if (*(philo->data->stop))
-		{
-			printf_mutex("is sleaping.", philo);
-			usleep(philo->data->time_sleep);
-		}
-		if (*(philo->data->stop))
-			printf_mutex("is thinking.", philo);
+		printf_mutex("is sleaping.", philo);
+		ft_usleep(philo->data->time_sleep);
+		printf_mutex("is thinking.", philo);
 	}
 	pthread_exit(NULL);
 }
@@ -157,6 +160,7 @@ void	close_and_clean(t_philos *philo)
 	i = -1;
 	while (++i < philo->data->n_philos)
 		pthread_join(philo[i].thread, NULL);
+	// pthread_join(philo->data->starvation, NULL);
 	i = -1;
 	while (++i < philo->data->n_philos)
 		pthread_mutex_destroy(&philo[i].fork_r);
@@ -185,7 +189,7 @@ t_philos	*philo_born(t_data *data)
 	while (++i < data->n_philos)
 	{
 		philo[i].id = i + 1;
-		philo[i].last_meal = 100 * timer();
+		philo[i].last_meal = timer();
 		philo[i].data = data;
 		if (pthread_mutex_init(&philo[i].fork_r, NULL))
 			ft_error("Error creating thread", 1, philo);
@@ -195,32 +199,31 @@ t_philos	*philo_born(t_data *data)
 	philo[0].fork_l = &philo[i - 1].fork_r;
 	i = -1;
 	data->time_start = timer();
-	if (pthread_create(&data->starvation, NULL, check_starvation, philo))
-		ft_error("Error creating thread.", 3, philo, data->stop, data->ends);//Poner stop para que paren
+	// if (pthread_create(&data->starvation, NULL, check_starvation, philo))
+	// 	ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 	while (++i < data->n_philos)
 	{
 		if (philo[i].id % 2 == 1)
 			if (pthread_create(&philo[i].thread, NULL, philo_right_handed, &philo[i]))
-				ft_error("Error creating thread.", 3, philo, data->stop, data->ends);//Poner stop para que paren
+				ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 		if (philo[i].id % 2 == 0)
 			if (pthread_create(&philo[i].thread, NULL, philo_left_handed, &philo[i]))
-				ft_error("Error creating thread.", 3, philo, data->stop, data->ends);//Poner stop para que paren
+				ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 	}
-	
 	return(philo);
 }
 
-void	ft_leaks(void)
-{
-	system("leaks -q philosophers");
-}
+// void	ft_leaks(void)
+// {
+// 	system("leaks -q philosophers");
+// }
 
 int	main(int narg, char **argv)
 {
 	t_data		data;
 	t_philos	*philos;
 
-	atexit(ft_leaks);
+	// atexit(ft_leaks);
 	data = parse_data(narg, argv);
 	philos = philo_born(&data);
 	close_and_clean(philos);

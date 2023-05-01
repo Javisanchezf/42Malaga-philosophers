@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/01 19:20:26 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/01 22:09:03 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@
 typedef struct	data
 {
 	unsigned int	n_philos;
-	unsigned int	time_dead;
-	unsigned int	time_eat;
-	unsigned int	time_sleep;
+	useconds_t		time_dead;
+	useconds_t		time_eat;
+	useconds_t		time_sleep;
 	unsigned int	n_eats;
 	short int		*ends;
 	short int		*stop; //Cuando finalice *stop = 0;
@@ -43,7 +43,7 @@ typedef struct	data
 typedef struct	philo
 {
 	unsigned int		id;
-	long				last_meal;
+	useconds_t			last_meal;
 	pthread_t			thread;
 	pthread_mutex_t		fork_r;
 	pthread_mutex_t		*fork_l;
