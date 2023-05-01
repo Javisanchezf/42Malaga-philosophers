@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/02 01:32:00 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/02 01:34:43 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	*check_starvation(void	*param)
 	while (*(philo->data->stop))
 	{
 		i = -1;
-		ft_usleep(1);
 		flag = 0;
 		while (++i < philo->data->n_philos)
 		{
