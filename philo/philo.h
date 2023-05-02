@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/02 19:21:10 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/02 21:10:20 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct data
 	useconds_t		time_eat;
 	useconds_t		time_sleep;
 	unsigned int	n_eats;
-	short int		*ends;
+	short int		ends;
 	short int		*stop;
 	long			time_start;
 	pthread_mutex_t	talk;
@@ -60,9 +60,9 @@ typedef struct philo
 	useconds_t			last_meal;
 	pthread_t			thread;
 	pthread_mutex_t		fork_r;
-	pthread_mutex_t		*fork_l;
+	pthread_mutex_t		fork_l;
 	pthread_mutex_t		mutex_eat;
-	t_data				*data;
+	t_data				data;
 }				t_philos;
 
 /**

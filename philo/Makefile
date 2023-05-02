@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+         #
+#    By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/24 17:38:03 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/02 12:40:33 by javiersa         ###   ########.fr        #
+#    Updated: 2023/05/02 19:42:48 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ gitignore:
 	@rm -rf .git .gitmodules
 	@echo "$(GREEN)All .git removed.$(DEFAULT)"
 valgrind:
-	valgrind --tool="helgrind" --tool="drd" -s ./philosophers $(PARAMS)
+	valgrind --tool="helgrind" -s ./philosophers $(PARAMS)
 #	valgrind --leak-check=full -s ./philosophers $(PARAMS)
 
 #COLORS
