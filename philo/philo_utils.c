@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/02 12:03:29 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:20:13 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 unsigned int	ft_atoui(const char *str)
 {
 	unsigned long	number;
-	int	i;
+	int				i;
 
 	number = 0;
 	i = 0;
@@ -43,13 +43,13 @@ useconds_t	timer(void)
 	return ((actual_time.tv_sec * 1000) + (actual_time.tv_usec / 1000));
 }
 
-void	ft_usleep(useconds_t ms, short int *stop)
+void	ft_usleep(useconds_t ms)
 {
 	useconds_t	time;
 
 	time = timer();
-	while (*(stop) == 1 && (timer() - time < ms))
-		usleep(10);
+	while (timer() - time < ms)
+		usleep(50);
 }
 
 void	printf_mutex(char *str, t_philos *philo)
@@ -57,9 +57,11 @@ void	printf_mutex(char *str, t_philos *philo)
 	useconds_t				time;
 
 	pthread_mutex_lock(&philo->data->talk);
+	pthread_mutex_lock(&philo->data->stop_mutex);
 	time = timer() - philo->data->time_start;
 	if (*(philo->data->stop) == 1)
 		printf("(%u) Philo %d %s\n", time, philo->id, str);
+	pthread_mutex_unlock(&philo->data->stop_mutex);
 	pthread_mutex_unlock(&philo->data->talk);
 }
 
@@ -78,5 +80,6 @@ void	close_and_clean(t_philos *philo)
 		pthread_mutex_destroy(&philo[i].mutex_eat);
 	}
 	pthread_mutex_destroy(&philo->data->talk);
+	pthread_mutex_destroy(&philo->data->stop_mutex);
 	ft_multiple_free(3, philo, philo->data->stop, philo->data->ends);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/02 12:33:49 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:20:49 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  *
  * @return NULL
  */
-void	*check_hunger(void	*param)
+void	*check_hunger(void *param)
 {
 	unsigned int	i;
 	t_philos		*philo;
@@ -33,19 +33,23 @@ void	*check_hunger(void	*param)
 	{
 		i = -1;
 		flag = 0;
+		ft_usleep(1);
 		while (++i < philo->data->n_philos)
 		{
 			pthread_mutex_lock(&philo[i].mutex_eat);
 			time = timer() - philo[i].last_meal;
-			if (time >= philo->data->time_dead)
+			pthread_mutex_lock(&philo->data->stop_mutex);
+			if (time > philo->data->time_dead)
 			{
 				*(philo->data->stop) = 0;
+				pthread_mutex_unlock(&philo->data->stop_mutex);
 				pthread_mutex_unlock(&philo[i].mutex_eat);
 				pthread_mutex_lock(&philo->data->talk);
 				printf("(%ld) Philo %d is dead.\n", timer() - philo->data->time_start, philo->id);
 				pthread_mutex_unlock(&philo->data->talk);
 				return (NULL);
 			}
+			pthread_mutex_unlock(&philo->data->stop_mutex);
 			if (*(philo->data->ends) == 1 && philo[i].n_meals < philo->data->n_eats)
 				flag = 1;
 			pthread_mutex_unlock(&philo[i].mutex_eat);
@@ -129,8 +133,10 @@ void	*philo_right_handed(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	while (*(philo->data->stop)  == 1)
+	pthread_mutex_lock(&philo->data->stop_mutex);
+	while (*(philo->data->stop) == 1)
 	{
+		pthread_mutex_unlock(&philo->data->stop_mutex);
 		pthread_mutex_lock(&philo->fork_r);
 		printf_mutex("has taken the right fork.", philo);
 		pthread_mutex_lock(philo->fork_l);
@@ -140,13 +146,15 @@ void	*philo_right_handed(void *arg)
 		philo->last_meal = timer();
 		philo->n_meals++;
 		pthread_mutex_unlock(&philo->mutex_eat);
-		ft_usleep(philo->data->time_eat, philo->data->stop);
+		ft_usleep(philo->data->time_eat);
 		pthread_mutex_unlock(philo->fork_l);
 		pthread_mutex_unlock(&philo->fork_r);
-		printf_mutex("is sleaping.", philo);
-		ft_usleep(philo->data->time_sleep, philo->data->stop);
+		printf_mutex("is sleeping.", philo);
+		ft_usleep(philo->data->time_sleep);
 		printf_mutex("is thinking.", philo);
+		pthread_mutex_lock(&philo->data->stop_mutex);
 	}
+	pthread_mutex_unlock(&philo->data->stop_mutex);
 	pthread_exit(NULL);
 }
 
@@ -161,8 +169,10 @@ void	*philo_left_handed(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	pthread_mutex_lock(&philo->data->stop_mutex);
 	while (*(philo->data->stop) == 1)
 	{
+		pthread_mutex_unlock(&philo->data->stop_mutex);
 		pthread_mutex_lock(philo->fork_l);
 		printf_mutex("has taken the left fork.", philo);
 		pthread_mutex_lock(&philo->fork_r);
@@ -172,13 +182,15 @@ void	*philo_left_handed(void *arg)
 		philo->last_meal = timer();
 		philo->n_meals++;
 		pthread_mutex_unlock(&philo->mutex_eat);
-		ft_usleep(philo->data->time_eat, philo->data->stop);
+		ft_usleep(philo->data->time_eat);
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
-		printf_mutex("is sleaping.", philo);
-		ft_usleep(philo->data->time_sleep, philo->data->stop);
+		printf_mutex("is sleeping.", philo);
+		ft_usleep(philo->data->time_sleep);
 		printf_mutex("is thinking.", philo);
+		pthread_mutex_lock(&philo->data->stop_mutex);
 	}
+	pthread_mutex_unlock(&philo->data->stop_mutex);
 	pthread_exit(NULL);
 }
 
@@ -223,6 +235,8 @@ t_philos	*philo_born(t_data *data)
 			philo[i].fork_l = &philo[i - 1].fork_r;
 	}
 	if (pthread_mutex_init(&philo->data->talk, NULL))
+		ft_error("Error creating mutex.", 3, philo, data->stop, data->ends);
+	if (pthread_mutex_init(&philo->data->stop_mutex, NULL))
 		ft_error("Error creating mutex.", 3, philo, data->stop, data->ends);
 	philo[0].fork_l = &philo[i - 1].fork_r;
 	i = -1;
