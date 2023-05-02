@@ -6,7 +6,7 @@
 #    By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/24 17:38:03 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/02 00:58:35 by javiersa         ###   ########.fr        #
+#    Updated: 2023/05/02 12:40:33 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ PERSONALNAME = Philosophers
 CC = gcc
 CLEAN = rm -Rf
 SRC = main.c ft_error.c philo_utils.c
-PARAMS = 4 401 200 200
+PARAMS = 2 5000 200 200 1
 
 OBJS := $(SRC:.c=.o)
 
@@ -61,7 +61,8 @@ gitignore:
 	@rm -rf .git .gitmodules
 	@echo "$(GREEN)All .git removed.$(DEFAULT)"
 valgrind:
-	valgrind --leak-check=full -s ./philosophers $(PARAMS)
+	valgrind --tool="helgrind" --tool="drd" -s ./philosophers $(PARAMS)
+#	valgrind --leak-check=full -s ./philosophers $(PARAMS)
 
 #COLORS
 BOLD	:= \033[1m

@@ -6,42 +6,21 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/02 01:34:43 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/02 12:33:49 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
-useconds_t	timer(void)
-{
-	struct timeval	actual_time;
-
-	gettimeofday(&actual_time, NULL);
-	return ((actual_time.tv_sec * 1000) + (actual_time.tv_usec / 1000));
-}
-
-void	ft_usleep(useconds_t ms)
-{
-	useconds_t	time;
-
-	time = timer();
-	while (timer() - time < ms)
-		usleep(ms / 1000);
-}
-
-void	printf_mutex(char *str, t_philos *philo)
-{
-	useconds_t				time;
-
-	pthread_mutex_lock(&philo->data->talk);
-	time = timer() - philo->data->time_start;
-	if (*(philo->data->stop))
-		printf("(%u) Philo %d %s\n", time, philo->id, str);
-	pthread_mutex_unlock(&philo->data->talk);
-}
-
-void	*check_starvation(void	*param)
+/**
+ * Checks if a philosopher has starved to death or if all
+ * philosophers have eaten their required number of meals.
+ * 
+ * @param param pointer to the philosopher
+ *
+ * @return NULL
+ */
+void	*check_hunger(void	*param)
 {
 	unsigned int	i;
 	t_philos		*philo;
@@ -62,10 +41,12 @@ void	*check_starvation(void	*param)
 			{
 				*(philo->data->stop) = 0;
 				pthread_mutex_unlock(&philo[i].mutex_eat);
+				pthread_mutex_lock(&philo->data->talk);
 				printf("(%ld) Philo %d is dead.\n", timer() - philo->data->time_start, philo->id);
+				pthread_mutex_unlock(&philo->data->talk);
 				return (NULL);
 			}
-			if (*(philo->data->ends) == 1 && philo->n_meals < philo->data->n_eats)
+			if (*(philo->data->ends) == 1 && philo[i].n_meals < philo->data->n_eats)
 				flag = 1;
 			pthread_mutex_unlock(&philo[i].mutex_eat);
 		}
@@ -73,7 +54,7 @@ void	*check_starvation(void	*param)
 		{
 			*(philo->data->stop) = 0;
 			pthread_mutex_lock(&philo->data->talk);
-			printf("All the philosophers have eaten!");
+			printf("All the philosophers have eaten!\n");
 			pthread_mutex_unlock(&philo->data->talk);
 			return (NULL);
 		}
@@ -81,6 +62,12 @@ void	*check_starvation(void	*param)
 	return (NULL);
 }
 
+/**
+ * Basic checks if the command-line arguments are valid
+ * @param narg: number of arguments
+ * @param argv: array of arguments
+ *
+ */
 void	check_args(int narg, char **argv)
 {
 	int	i;
@@ -98,6 +85,14 @@ void	check_args(int narg, char **argv)
 	}
 }
 
+/**
+ * Parses command-line arguments and initializes a `t_data` struct.
+ *
+ * @brief   Parses command-line arguments and initializes a `t_data` struct.
+ * @param   narg    The number of command-line arguments.
+ * @param   argv    The command-line arguments.
+ * @return  A `t_data` struct with the parsed values.
+ */
 t_data	parse_data(int narg, char **argv)
 {
 	t_data		data;
@@ -123,12 +118,18 @@ t_data	parse_data(int narg, char **argv)
 	return (data);
 }
 
+/**
+ * The right-handed philosopher
+ * @param arg: a pointer to the philosopher
+ *
+ * @return NULL
+ */
 void	*philo_right_handed(void *arg)
 {
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	while (*(philo->data->stop))
+	while (*(philo->data->stop)  == 1)
 	{
 		pthread_mutex_lock(&philo->fork_r);
 		printf_mutex("has taken the right fork.", philo);
@@ -139,22 +140,28 @@ void	*philo_right_handed(void *arg)
 		philo->last_meal = timer();
 		philo->n_meals++;
 		pthread_mutex_unlock(&philo->mutex_eat);
-		ft_usleep(philo->data->time_eat);
+		ft_usleep(philo->data->time_eat, philo->data->stop);
 		pthread_mutex_unlock(philo->fork_l);
 		pthread_mutex_unlock(&philo->fork_r);
 		printf_mutex("is sleaping.", philo);
-		ft_usleep(philo->data->time_sleep);
+		ft_usleep(philo->data->time_sleep, philo->data->stop);
 		printf_mutex("is thinking.", philo);
 	}
 	pthread_exit(NULL);
 }
 
+/**
+ * The left-handed philosopher
+ * @param arg: a pointer to the philosopher
+ *
+ * @return NULL
+ */
 void	*philo_left_handed(void *arg)
 {
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	while (*(philo->data->stop))
+	while (*(philo->data->stop) == 1)
 	{
 		pthread_mutex_lock(philo->fork_l);
 		printf_mutex("has taken the left fork.", philo);
@@ -165,34 +172,24 @@ void	*philo_left_handed(void *arg)
 		philo->last_meal = timer();
 		philo->n_meals++;
 		pthread_mutex_unlock(&philo->mutex_eat);
-		ft_usleep(philo->data->time_eat);
+		ft_usleep(philo->data->time_eat, philo->data->stop);
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
 		printf_mutex("is sleaping.", philo);
-		ft_usleep(philo->data->time_sleep);
+		ft_usleep(philo->data->time_sleep, philo->data->stop);
 		printf_mutex("is thinking.", philo);
 	}
 	pthread_exit(NULL);
 }
 
-void	close_and_clean(t_philos *philo)
-{
-	unsigned int	i;
-
-	i = -1;
-	while (++i < philo->data->n_philos)
-		pthread_join(philo[i].thread, NULL);
-	pthread_join(philo->data->starvation, NULL);
-	i = -1;
-	while (++i < philo->data->n_philos)
-	{
-		pthread_mutex_destroy(&philo[i].fork_r);
-		pthread_mutex_destroy(&philo[i].mutex_eat);
-	}
-	pthread_mutex_destroy(&philo->data->talk);
-	ft_multiple_free(3, philo, philo->data->stop, philo->data->ends);
-}
-
+/**
+*
+* Creates an array of philosophers and initializes their variables and trheads.
+*
+*@param data: a pointer to the main data structure
+*
+* @return A pointer to the array of philosophers
+*/
 t_philos	*philo_born(t_data *data)
 {
 	unsigned int	i;
@@ -230,8 +227,6 @@ t_philos	*philo_born(t_data *data)
 	philo[0].fork_l = &philo[i - 1].fork_r;
 	i = -1;
 	data->time_start = timer();
-	if (pthread_create(&data->starvation, NULL, check_starvation, philo))
-		ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 	while (++i < data->n_philos)
 	{
 		if (philo[i].id % 2 == 1)
@@ -241,6 +236,8 @@ t_philos	*philo_born(t_data *data)
 			if (pthread_create(&philo[i].thread, NULL, philo_left_handed, &philo[i]))
 				ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 	}
+	if (pthread_create(&data->starvation, NULL, check_hunger, philo))
+		ft_error("Error creating thread.", 3, philo, data->stop, data->ends);
 	return(philo);
 }
 
@@ -255,6 +252,7 @@ int	main(int narg, char **argv)
 	t_philos	*philos;
 
 	// atexit(ft_leaks);
+	printf("%s", (char *)&(HEADER));
 	data = parse_data(narg, argv);
 	philos = philo_born(&data);
 	close_and_clean(philos);
