@@ -3,20 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+         #
+#    By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/04/24 17:38:03 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/03 10:15:14 by javiersa         ###   ########.fr        #
+#    Created: 2023/05/03 18:22:49 by javiersa          #+#    #+#              #
+#    Updated: 2023/05/03 19:54:23 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philosophers.a
 PROGRAM = philosophers
-CFLAGS = -Wall -Werror -Wextra -pthread
+CFLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
 PERSONALNAME = Philosophers
 CC = gcc
 CLEAN = rm -Rf
-SRC = main.c ft_error.c philo_utils.c
+SRC = main.c ft_error.c philo_utils.c philo_threads.c check_hunger.c
 PARAMS = 5 500 200 200 3
 
 OBJS := $(SRC:.c=.o)
@@ -79,6 +79,3 @@ WHITE	:= \033[37;1m
 DEFAULT	:= \033[0m
 
 .PHONY : all clean fclean re bonus git gitignore submodules 42prepare .c.o
-
-#gcc -g -o myprogram myprogram.c
-#leaks myprogram

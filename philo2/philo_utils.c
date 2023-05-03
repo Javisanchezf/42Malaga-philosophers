@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/03 10:14:26 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:14:15 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 unsigned int	ft_atoui(const char *str)
 {
 	unsigned long	number;
-	int	i;
+	int				i;
 
 	number = 0;
 	i = 0;

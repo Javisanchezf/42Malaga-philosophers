@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/03 10:06:14 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:14:01 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <stdarg.h>
 # include <unistd.h>
 # include <pthread.h>
-#include <sys/time.h>
+# include <sys/time.h>
 
 # define INSTRUCTIONS ("Invalid number of arguments, variables:\n \
 ◦[1] Number of philosophers \n \
@@ -38,7 +38,7 @@
 ◦[4] Time to sleep (milliseconds)\n \
 ◦[5] Number of times each philosopher must eat (OPTIONAL)")
 
-typedef struct	data
+typedef struct data
 {
 	unsigned int	n_philos;
 	useconds_t		time_dead;
@@ -53,7 +53,7 @@ typedef struct	data
 	pthread_t		starvation;
 }				t_data;
 
-typedef struct	philo
+typedef struct philo
 {
 	unsigned int		id;
 	unsigned int		n_meals;
@@ -74,7 +74,7 @@ typedef struct	philo
  * @param ... A variable number of pointers to be freed before exiting.
  * @return void
  */
-void	ft_error(char *prompt, int num_args, ...);
+void			ft_error(char *prompt, int num_args, ...);
 
 /**
  * @brief Converts a string to an unsigned integer
@@ -82,7 +82,7 @@ void	ft_error(char *prompt, int num_args, ...);
  * @param str The string to convert
  * @return unsigned int The converted unsigned integer
  */
-unsigned int		ft_atoui(const char *str);
+unsigned int	ft_atoui(const char *str);
 
 /**
 * @brief Frees multiple dynamically allocated memory blocks and sets the
@@ -96,7 +96,7 @@ unsigned int		ft_atoui(const char *str);
 * blocks to be freed.
 * @return void.
 */
-void	ft_multiple_free(int num_args, ...);
+void			ft_multiple_free(int num_args, ...);
 
 /**
  * @brief Sleeps for a specified number of milliseconds
@@ -104,28 +104,46 @@ void	ft_multiple_free(int num_args, ...);
  * @param ms The number of milliseconds to sleep for
  * @param stop A pointer to a flag that controls whether to stop sleeping or not
  */
-void	ft_usleep(useconds_t ms);
+void			ft_usleep(useconds_t ms);
 
 /**
- * @brief Prints a message with a timestamp and philosopher ID, if the stop flag is not set
+ * @brief Prints a message with a timestamp and philosopher 
+ * ID, if the stop flag is not set
  * 
  * @param str The message to print
  * @param philo A pointer to the philosopher data
  */
-void	printf_mutex(char *str, t_philos *philo);
+void			printf_mutex(char *str, t_philos *philo);
 
 /**
  * @brief Joins all philosopher threads and cleans up memory
  * 
  * @param philo A pointer to the philosopher data
  */
-void	close_and_clean(t_philos *philo);
+void			close_and_clean(t_philos *philo);
 
 /**
  * @brief Gets the current time in milliseconds
  * 
  * @return useconds_t The current time in milliseconds
  */
-useconds_t	timer(void);
+useconds_t		timer(void);
+
+/**
+ * @brief Creates all philo-threads.
+ * 
+ * @param philo A pointer to the philosopher data.
+ * @param data A pointer to the data.
+ * @param i Unsigned number.
+ */
+void			philo_born(t_philos *philo, t_data *data, unsigned int i);
+
+/**
+ * @brief It is a thread that checks if any philosopher has starved 
+ * or if all philosophers have eaten the minimum number of times.
+ * 
+ * @param param A pointer to the philosopher data.
+ */
+void			*check_hunger(void	*param);
 
 #endif
