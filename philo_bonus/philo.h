@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/04 14:36:49 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/04 14:56:11 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,12 @@ typedef struct data
 	short int		ends;
 	short int		*stop;
 	long			time_start;
-	pthread_mutex_t	talk;
-	pthread_mutex_t	stop_mutex;
+	// pthread_mutex_t	talk;
+	// pthread_mutex_t	stop_mutex;
 	pthread_t		starvation;
 	sem_t			*forks;
+	sem_t			*talk;
+	sem_t			*stop_sem;
 }				t_data;
 
 typedef struct philo
@@ -62,7 +64,8 @@ typedef struct philo
 	unsigned int		n_meals;
 	useconds_t			last_meal;
 	pthread_t			thread;
-	pthread_mutex_t		mutex_eat;
+	// pthread_mutex_t		mutex_eat;
+	sem_t				*eat_data;
 	t_data				*data;
 }				t_philos;
 
@@ -114,7 +117,7 @@ void			ft_usleep(useconds_t ms);
  * @param str The message to print
  * @param philo A pointer to the philosopher data
  */
-void			printf_mutex(char *str, t_philos *philo);
+void			printf_sem(char *str, t_philos *philo);
 
 /**
  * @brief Joins all philosopher threads and cleans up memory

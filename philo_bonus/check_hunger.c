@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:33:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/04 14:38:44 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/04 15:15:16 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@ int	check_death(unsigned int i, t_philos *philo, int *flag, useconds_t time)
 {
 	while (++i < philo->data->n_philos)
 	{
-		pthread_mutex_lock(&philo[i].mutex_eat);
+		sem_wait(philo[i].eat_data);
 		time = timer() - philo[i].last_meal;
 		if (time > philo->data->time_dead)
 		{
-			pthread_mutex_lock(&philo->data->stop_mutex);
+			sem_wait(philo->data->stop_sem);
 			*(philo->data->stop) = 0;
-			pthread_mutex_unlock(&philo->data->stop_mutex);
-			pthread_mutex_unlock(&philo[i].mutex_eat);
-			pthread_mutex_lock(&philo->data->talk);
+			sem_post(philo->data->stop_sem);
+			sem_post(philo[i].eat_data);
+			sem_wait(philo->data->talk);
 			printf("(%ld) Philo %d is dead.\n", timer() - \
 			philo->data->time_start, philo->id);
-			pthread_mutex_unlock(&philo->data->talk);
+			sem_post(philo->data->talk);
 			i = -1;
 			while (++i < philo->data->n_philos)
 				sem_post(philo->data->forks);
@@ -35,7 +35,7 @@ int	check_death(unsigned int i, t_philos *philo, int *flag, useconds_t time)
 		}
 		if (philo->data->ends == 1 && philo[i].n_meals < philo->data->n_eats)
 			*(flag) = 1;
-		pthread_mutex_unlock(&philo[i].mutex_eat);
+		sem_post(philo[i].eat_data);
 	}
 	return (1);
 }
@@ -44,12 +44,12 @@ int	check_all_eat(t_philos *philo, int flag)
 {
 	if (philo->data->ends == 1 && flag == 0)
 	{
-		pthread_mutex_lock(&philo->data->stop_mutex);
+		sem_wait(philo->data->stop_sem);
 		*(philo->data->stop) = 0;
-		pthread_mutex_unlock(&philo->data->stop_mutex);
-		pthread_mutex_lock(&philo->data->talk);
+		sem_post(philo->data->stop_sem);
+		sem_wait(philo->data->talk);
 		printf("All the philosophers have eaten!\n");
-		pthread_mutex_unlock(&philo->data->talk);
+		sem_post(philo->data->talk);
 		return (0);
 	}
 	return (1);
@@ -64,10 +64,10 @@ void	*check_hunger(void	*param)
 
 	philo = (t_philos *)param;
 	i = -1;
-	pthread_mutex_lock(&philo->data->stop_mutex);
+	sem_wait(philo->data->stop_sem);
 	while (*(philo->data->stop))
 	{
-		pthread_mutex_unlock(&philo->data->stop_mutex);
+		sem_post(philo->data->stop_sem);
 		i = -1;
 		flag = 0;
 		time = 0;
@@ -76,8 +76,8 @@ void	*check_hunger(void	*param)
 			return (NULL);
 		if (check_all_eat(philo, flag) == 0)
 			return (NULL);
-		pthread_mutex_lock(&philo->data->stop_mutex);
+		sem_wait(philo->data->stop_sem);
 	}
-	pthread_mutex_unlock(&philo->data->stop_mutex);
+	sem_post(philo->data->stop_sem);
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/04 14:36:03 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/04 15:16:13 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,17 @@ void	ft_usleep(useconds_t ms)
 		usleep(10);
 }
 
-void	printf_mutex(char *str, t_philos *philo)
+void	printf_sem(char *str, t_philos *philo)
 {
 	useconds_t				time;
 
-	pthread_mutex_lock(&philo->data->talk);
+	sem_wait(philo->data->talk);
 	time = timer() - philo->data->time_start;
-	pthread_mutex_lock(&philo->data->stop_mutex);
+	sem_wait(philo->data->stop_sem);
 	if (*(philo->data->stop) == 1)
 		printf("(%u) Philo %d %s\n", time, philo->id, str);
-	pthread_mutex_unlock(&philo->data->stop_mutex);
-	pthread_mutex_unlock(&philo->data->talk);
+	sem_post(philo->data->stop_sem);
+	sem_post(philo->data->talk);
 }
 
 void	close_and_clean(t_philos *philo)
@@ -75,10 +75,15 @@ void	close_and_clean(t_philos *philo)
 	pthread_join(philo->data->starvation, NULL);
 	i = -1;
 	while (++i < philo->data->n_philos)
-		pthread_mutex_destroy(&philo[i].mutex_eat);
-	sem_close(philo->data->forks);
+	{
+		sem_unlink("/eat_data");
+		sem_close(philo->eat_data);
+	}
 	sem_unlink("/forks");
-	pthread_mutex_destroy(&philo->data->talk);
-	pthread_mutex_destroy(&philo->data->stop_mutex);
+	sem_close(philo->data->forks);
+	sem_unlink("/talk");
+	sem_close(philo->data->talk);
+	sem_unlink("/stop_sem");
+	sem_close(philo->data->stop_sem);
 	ft_multiple_free(2, philo, philo->data->stop);
 }
