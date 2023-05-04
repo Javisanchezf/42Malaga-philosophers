@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/04 15:16:13 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/04 21:10:18 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_usleep(useconds_t ms)
 
 	time = timer();
 	while (timer() - time < ms)
-		usleep(10);
+		usleep(ms * 1000);
 }
 
 void	printf_sem(char *str, t_philos *philo)

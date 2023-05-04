@@ -3,16 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+         #
+#    By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/03 18:22:49 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/04 15:19:31 by javiersa         ###   ########.fr        #
+#    Updated: 2023/05/04 21:16:16 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philosophers.a
-PROGRAM = philosophers
-CFLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
+PROGRAM = philo_bonus
+CFLAGS = -Wall -Werror -Wextra -pthread
+SANITIZE = -fsanitize=thread -g
 PERSONALNAME = Philosophers
 CC = gcc
 CLEAN = rm -Rf

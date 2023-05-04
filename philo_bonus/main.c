@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/03 19:58:39 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/04 21:14:20 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,10 @@ int	main(int narg, char **argv)
 	if (!philo)
 		ft_error("Error allocating memory.", 1, data.stop);
 	philo_born(philo, &data, -1);
+	sem_wait(data.stop_sem);
 	if (pthread_create(&data.starvation, NULL, check_hunger, philo))
 		ft_error("Error creating mutex.", 2, philo, data.stop);
+	sem_post(data.stop_sem);
 	close_and_clean(philo);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_hunger.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:33:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/04 15:15:16 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/04 21:10:32 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

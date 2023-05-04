@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_threads.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:13:26 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/04 15:21:47 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/04 21:17:13 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	philo_born(t_philos *philo, t_data *data, unsigned int i)
 {
 	data->forks = sem_open("forks", O_CREAT, 0644, data->n_philos);
 	data->talk = sem_open("talk", O_CREAT, 0644, 1);
-	data->stop_sem = sem_open("stop", O_CREAT, 0644, 1);
+	data->stop_sem = sem_open("stop_sem", O_CREAT, 0644, 1);
 	if (data->forks == SEM_FAILED || data->talk == SEM_FAILED || \
 	data->stop_sem == SEM_FAILED)
 		ft_error("Error creating semaphore.", 2, philo, data->stop);
