@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:13:26 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/04 21:17:13 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/08 17:52:50 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ void	exception(t_philos *philo)
 
 void	eat(t_philos *philo)
 {
-	sem_wait(philo->data->forks);
 	printf_sem("has taken one fork.", philo);
 	sem_wait(philo->data->forks);
 	printf_sem("has taken the other fork.", philo);
 	sem_wait(philo->eat_data);
+	sem_wait(philo->data->forks);
 	printf_sem("is eating.", philo);
 	philo->last_meal = timer();
 	philo->n_meals++;
