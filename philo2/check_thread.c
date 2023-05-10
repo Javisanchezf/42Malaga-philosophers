@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_hunger.c                                     :+:      :+:    :+:   */
+/*   check_thread.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:33:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 12:57:51 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:08:37 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ int	check_all_eat(t_philos *philo, int flag)
 	return (1);
 }
 
-void	*check_hunger(void	*param)
+void	*check_thread(void	*param)
 {
-	int	i;
-	t_philos		*philo;
-	int				flag;
+	int			i;
+	t_philos	*philo;
+	int			flag;
 
 	philo = (t_philos *)param;
 	pthread_mutex_lock(&philo->data->stop_mutex);

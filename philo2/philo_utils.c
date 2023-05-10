@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 12:56:44 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:07:35 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,4 @@ void	printf_mutex(char *str, t_philos *philo)
 		printf("(%u) Philo %d %s\n", time, philo->id, str);
 	pthread_mutex_unlock(&philo->data->stop_mutex);
 	pthread_mutex_unlock(&philo->data->talk);
-}
-
-void	close_and_clean(t_philos *philo)
-{
-	int	i;
-
-	i = -1;
-	while (++i < philo->data->n_philos)
-		pthread_join(philo[i].thread, NULL);
-	pthread_join(philo->data->starvation, NULL);
-	i = -1;
-	while (++i < philo->data->n_philos)
-	{
-		pthread_mutex_destroy(&philo[i].fork_r);
-		pthread_mutex_destroy(&philo[i].mutex_eat);
-	}
-	pthread_mutex_destroy(&philo->data->talk);
-	pthread_mutex_destroy(&philo->data->stop_mutex);
 }
