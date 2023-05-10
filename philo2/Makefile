@@ -6,7 +6,7 @@
 #    By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/03 18:22:49 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/10 12:25:05 by javiersa         ###   ########.fr        #
+#    Updated: 2023/05/10 13:04:16 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
 PERSONALNAME = Philosophers
 CC = gcc
 CLEAN = rm -Rf
-SRC = main.c philo_utils.c philo_threads.c check_hunger.c parse.c
+SRC = main.c philo_utils.c philo_threads.c check_thread.c parse.c
 PARAMS = 5 500 200 200 3
 
 OBJS := $(SRC:.c=.o)
