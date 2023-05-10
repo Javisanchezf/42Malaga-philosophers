@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:13:26 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 13:25:04 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 14:09:36 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	*philo_thread(void *arg)
 		eat(philo);
 		printf_mutex("is sleaping.", philo);
 		ft_usleep(philo->data->time_sleep, philo);
+		if (philo->data->time_sleep == 0)
+			usleep(1);
 		printf_mutex("is thinking.", philo);
 		pthread_mutex_lock(&philo->data->stop_mutex);
 	}
