@@ -6,7 +6,7 @@
 #    By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/03 18:22:49 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/10 14:02:19 by javiersa         ###   ########.fr        #
+#    Updated: 2023/05/10 14:17:21 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ CC = gcc
 CLEAN = rm -Rf
 SRC = main.c philo_utils.c philo_threads.c check_thread.c parse.c
 PARAMS = 5 500 200 200 3
+DATETIME := $(shell date +%Y-%m-%d' '%H:%M:%S)
 
 OBJS := $(SRC:.c=.o)
 
@@ -48,8 +49,8 @@ re: fclean all
 git: fclean gitignore
 	@git add *
 	@echo "$(BOLD)$(YELLOW)Git:$(WHITE) Adding all archives.$(DEFAULT)"
-	@git commit -m "Little changes"
-	@echo "$(BOLD)$(CYAN)Git:$(WHITE) Commit this changes with "Little changes".$(DEFAULT)"
+	@git commit -m "Little changes $(DATETIME)"
+	@echo "$(BOLD)$(CYAN)Git:$(WHITE) Commit this changes with "Little changes $(DATETIME)".$(DEFAULT)"
 	@git push
 	@echo "$(BOLD)$(GREEN)Git:$(WHITE) Pushing all changes.$(DEFAULT)"
 gitignore:
@@ -65,7 +66,6 @@ valgrind_datarace:
 	valgrind --tool="helgrind" ./philosophers $(PARAMS)
 valgrind_leaks:
 	valgrind --leak-check=full ./philosophers $(PARAMS)
-#	valgrind --leak-check=full -s ./philosophers $(PARAMS)
 
 #COLORS
 BOLD	:= \033[1m
