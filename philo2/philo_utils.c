@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 13:22:28 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:34:39 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	timer(void)
 	return ((actual_time.tv_sec * 1000) + (actual_time.tv_usec / 1000));
 }
 
-void	ft_usleep(useconds_t ms, t_philos *philo)
+void	ft_usleep(int ms, t_philos *philo)
 {
-	useconds_t	time;
+	int	time;
 
 	time = timer();
 	pthread_mutex_lock(&philo->data->stop_mutex);
@@ -37,13 +37,13 @@ void	ft_usleep(useconds_t ms, t_philos *philo)
 
 void	printf_mutex(char *str, t_philos *philo)
 {
-	useconds_t				time;
+	int	time;
 
 	pthread_mutex_lock(&philo->data->talk);
 	time = timer() - philo->data->time_start;
 	pthread_mutex_lock(&philo->data->stop_mutex);
 	if (philo->data->stop == 1)
-		printf("(%u) Philo %d %s\n", time, philo->id, str);
+		printf("(%d) Philo %d %s\n", time, philo->id, str);
 	pthread_mutex_unlock(&philo->data->stop_mutex);
 	pthread_mutex_unlock(&philo->data->talk);
 }

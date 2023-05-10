@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 13:25:19 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:34:51 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	*philo_thread(void *arg);
 void	*check_thread(void	*param);
 void	printf_mutex(char *str, t_philos *philo);
 int		timer(void);
-void	ft_usleep(useconds_t ms, t_philos *philo);
+void	ft_usleep(int ms, t_philos *philo);
 int		ft_error(char *s);
 void	*exception(void *arg);
 
