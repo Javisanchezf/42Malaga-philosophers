@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 13:07:35 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:22:28 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_usleep(useconds_t ms, t_philos *philo)
 	while ((timer() - time < ms) && philo->data->stop)
 	{
 		pthread_mutex_unlock(&philo->data->stop_mutex);
-		usleep(42);
+		usleep(10);
 		pthread_mutex_lock(&philo->data->stop_mutex);
 	}
 	pthread_mutex_unlock(&philo->data->stop_mutex);

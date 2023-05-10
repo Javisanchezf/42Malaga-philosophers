@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 13:08:48 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:29:35 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,13 @@ int	main(int narg, char **argv)
 		return (1);
 	i = -1;
 	data.time_start = timer();
-	while (++i < data.n_philos)
-		if (pthread_create(&philo[i].thread, NULL, philo_thread, &philo[i]))
-			return (ft_error("Error creating mutex."));
+	if (data.n_philos == 1)
+		if (pthread_create(&philo[0].thread, NULL, exception, &philo[0]))
+				return (ft_error("Error creating mutex."));
+	if (data.n_philos != 1)
+		while (++i < data.n_philos)
+			if (pthread_create(&philo[i].thread, NULL, philo_thread, &philo[i]))
+				return (ft_error("Error creating mutex."));
 	if (pthread_create(&data.starvation, NULL, check_thread, philo))
 		return (ft_error("Error creating mutex."));
 	close_and_clean(philo);
