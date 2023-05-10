@@ -6,15 +6,15 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:33:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 12:39:15 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 12:57:51 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_death(unsigned int i, t_philos *philo, int *flag)
+int	check_death(int i, t_philos *philo, int *flag)
 {
-	useconds_t		time;
+	int		time;
 
 	while (++i < philo->data->n_philos)
 	{
@@ -56,7 +56,7 @@ int	check_all_eat(t_philos *philo, int flag)
 
 void	*check_hunger(void	*param)
 {
-	unsigned int	i;
+	int	i;
 	t_philos		*philo;
 	int				flag;
 

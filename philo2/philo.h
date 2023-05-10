@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 12:37:29 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 12:58:31 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@
 
 typedef struct data
 {
-	unsigned int	n_philos;
-	useconds_t		time_dead;
-	useconds_t		time_eat;
-	useconds_t		time_sleep;
-	unsigned int	n_eats;
+	int				n_philos;
+	int		time_dead;
+	int		time_eat;
+	int		time_sleep;
+	int	n_eats;
 	short int		ends;
 	short int		stop;
 	long			time_start;
@@ -54,9 +54,9 @@ typedef struct data
 
 typedef struct philo
 {
-	unsigned int		id;
-	unsigned int		n_meals;
-	useconds_t			last_meal;
+	int		id;
+	int		n_meals;
+	int			last_meal;
 	pthread_t			thread;
 	pthread_mutex_t		fork_r;
 	pthread_mutex_t		*fork_l;
@@ -64,9 +64,10 @@ typedef struct philo
 	t_data				*data;
 }				t_philos;
 
-void	parse(int narg, char **argv, t_data *data, t_philos *philo);
-void	ft_error(char *s);
+int	parse(int narg, char **argv, t_data *data, t_philos *philo);
+int		ft_error(char *s);
 void	*philo_thread(void *arg);
+int	timer(void);
 
 /**
  * Displays an error message on the standard error output and exits the program
@@ -130,7 +131,7 @@ void			close_and_clean(t_philos *philo);
  * 
  * @return useconds_t The current time in milliseconds
  */
-useconds_t		timer(void);
+// useconds_t		timer(void);
 
 /**
  * @brief Creates all philo-threads.

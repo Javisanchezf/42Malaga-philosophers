@@ -6,13 +6,13 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:00:52 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 12:37:02 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/10 12:56:44 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-useconds_t	timer(void)
+int	timer(void)
 {
 	struct timeval	actual_time;
 
@@ -50,7 +50,7 @@ void	printf_mutex(char *str, t_philos *philo)
 
 void	close_and_clean(t_philos *philo)
 {
-	unsigned int	i;
+	int	i;
 
 	i = -1;
 	while (++i < philo->data->n_philos)
