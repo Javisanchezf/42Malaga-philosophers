@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:58:04 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/11 21:34:37 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/11 22:01:40 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	close_and_clean2(t_philos *philo)
 	int	i;
 
 	i = -1;
-	// while (++i < philo->data->n_philos)
-	// 	kill(philo[i].pid, SIGKILL);
 	sem_unlink("/forks");
 	sem_unlink("/talk");
 	sem_unlink("/stop");
@@ -67,10 +65,9 @@ int	main(int narg, char **argv)
 			exit(EXIT_SUCCESS);
 		}			
 		if (philo[i].pid < 0)
-			printf("FAIL"); // hacer cositas
+			return (ft_error("Failed to create the processes."));
 	}
 	if (philo->pid > 0)
 		check_philos(philo);
-	// close_and_clean2(philo);
 	return (0);
 }
