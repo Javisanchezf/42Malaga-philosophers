@@ -6,7 +6,7 @@
 #    By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/03 18:22:49 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/11 21:50:41 by javiersa         ###   ########.fr        #
+#    Updated: 2023/05/11 21:59:39 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SANITIZE = -fsanitize=thread -g
 PERSONALNAME = Philosophers
 CC = gcc
 CLEAN = rm -Rf
-SRC = main.c philo_utils.c philo_fork.c check_thread.c parse.c
+SRC = main.c philo_utils.c philo_fork.c check_philos.c parse.c
 PARAMS = 5 500 200 200 3
 DATETIME := $(shell date +%Y-%m-%d' '%H:%M:%S)
 
