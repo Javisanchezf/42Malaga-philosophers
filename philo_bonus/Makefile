@@ -6,13 +6,13 @@
 #    By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/03 18:22:49 by javiersa          #+#    #+#              #
-#    Updated: 2023/05/11 21:37:54 by javiersa         ###   ########.fr        #
+#    Updated: 2023/05/11 21:50:41 by javiersa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philosophers.a
 PROGRAM = philo_bonus
-CFLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
+CFLAGS = -Wall -Werror -Wextra -pthread
 SANITIZE = -fsanitize=thread -g
 PERSONALNAME = Philosophers
 CC = gcc
