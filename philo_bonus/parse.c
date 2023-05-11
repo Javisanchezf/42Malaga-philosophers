@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 11:50:47 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/11 15:34:26 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/11 21:44:47 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ range of unsigned int.") * -1);
 int	parse_data(int narg, char **argv, t_data *data)
 {
 	data->ends = 0;
-	data->stop = 1;
+	data->flag = 0;
 	data->n_philos = ft_atoi_mod(argv[1]);
 	data->time_dead = ft_atoi_mod(argv[2]);
 	data->time_eat = ft_atoi_mod(argv[3]);
@@ -70,10 +70,11 @@ int	parse_data(int narg, char **argv, t_data *data)
 		return (ft_error("There is no philosopher."));
 	if (data->n_philos > 242)
 		return (ft_error("The maximum number of philosophers is 242."));
-	data->stop_sem = sem_open("/stop", O_CREAT, 0644, 1);
+	data->stop_sem = sem_open("/stop", O_CREAT, 0644, 0);
 	data->talk = sem_open("/talk", O_CREAT, 0644, 1);
 	data->forks = sem_open("/forks", O_CREAT, 0644, data->n_philos / 2);
-	if (data->stop_sem == SEM_FAILED || data->talk == SEM_FAILED || data->forks == SEM_FAILED)
+	if (data->stop_sem == SEM_FAILED || data->talk == SEM_FAILED \
+	|| data->forks == SEM_FAILED)
 		return (ft_error("Error creating the stop semaphore."));
 	return (0);
 }
@@ -83,11 +84,12 @@ int	parse_philo(t_data *data, t_philos *philo, int i)
 	while (++i < data->n_philos)
 	{
 		philo[i].id = i + 1;
+		philo[i].last_meal = timer();
 		philo[i].last_meal = 0;
 		philo[i].data = data;
+		philo[i].philo_sem = sem_open("/philo_sem", O_CREAT, 0644, 1);
 		philo[i].n_meals = sem_open("/n_meals", O_CREAT, 0644, 0);
-		philo[i].t_meal = sem_open("/t_meal", O_CREAT, 0644, 0);
-		if (philo[i].n_meals == SEM_FAILED || philo[i].t_meal == SEM_FAILED)
+		if (philo[i].philo_sem == SEM_FAILED || philo[i].n_meals == SEM_FAILED)
 			return (ft_error("Error creating the last meal semaphore."));
 	}
 	return (0);

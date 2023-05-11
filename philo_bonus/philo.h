@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/11 16:19:11 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:45:31 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,36 +49,25 @@ typedef struct data
 	int				time_sleep;
 	int				n_eats;
 	short int		ends;
+	short int		flag;
 	long			time_start;
-	short int		stop;
-	sem_t			*talk; //
+	sem_t			*talk;
 	sem_t			*stop_sem;
 	sem_t			*forks;
-	pthread_t		ckeck_thread; //
-	pid_t			father_pid;
-	// pthread_t		starvation;
-	// pthread_mutex_t	talk;
-	// pthread_mutex_t	stop_mutex;
 }				t_data;
 
 typedef struct philo
 {
 	pid_t				pid;
 	int					id;
-	long				last_meal; //
+	long				last_meal;
 	t_data				*data;
-	sem_t				*n_meals; //
-	sem_t				*t_meal; //
-	// int					n_meals;
-	// int					last_meal;
-	// pthread_t			thread;
-	// pthread_mutex_t		fork_r;
-	// pthread_mutex_t		*fork_l;
-	// pthread_mutex_t		mutex_eat;
+	sem_t				*philo_sem;
+	sem_t				*n_meals;
 }				t_philos;
 
 int		parse(int narg, char **argv, t_data *data, t_philos *philo);
-void	*check_thread(void	*param);
+void	check_philos(t_philos *philo);
 void	philo_fork(t_philos *philo);
 void	printf_sem(char *str, t_philos *philo);
 long	timer(void);
