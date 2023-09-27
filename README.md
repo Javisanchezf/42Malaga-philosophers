@@ -88,7 +88,7 @@ Replace the placeholders with the desired values for the simulation. For example
 ```
 ## Tips
 
-- Use the sanitaze flag when compiling (cc *.c -fsanitize=thread -g -o philo_sanitize) or [valgrind](https://valgrind.org/docs/manual/quick-start.html) to see the datarace.
+- Use the sanitaze flag when compiling (-fsanitize=thread) or [valgrind](https://valgrind.org/docs/manual/quick-start.html) to see the datarace.
 - Be careful with variables you access from different threads. Create a mutex for each variable that you can access if necessary.
 - Be careful that they cannot speak at the same time, put a mutex protecting your printf.
 - Be especially careful when it is 0 or 1 philosopher.
