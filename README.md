@@ -109,7 +109,7 @@ SURVIVE:
 ```
 At least 40 must be obtained.
 ```
-cc *.c -fsanitize=thread -g -o philo_sanitize
+cc *.c  -Wall -Werror -Wextra -pthread -fsanitize=thread -g -o philo_sanitize
 ./philo_sanitize 4 410 100 100 8
 ```
 No Datarace notices should appear.
