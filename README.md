@@ -88,7 +88,7 @@ Replace the placeholders with the desired values for the simulation. For example
 ```
 ## Tips
 
-- Use the sanitaze flag when compiling (cc *.c -fsanitize=thread -g -o philo) or [valgrind](https://valgrind.org/docs/manual/quick-start.html) to see the datarace.
+- Use the sanitaze flag when compiling (cc *.c -fsanitize=thread -g -o philo_sanitize) or [valgrind](https://valgrind.org/docs/manual/quick-start.html) to see the datarace.
 - Be careful with variables you access from different threads. Create a mutex for each variable that you can access if necessary.
 - Be careful that they cannot speak at the same time, put a mutex protecting your printf.
 - Be especially careful when it is 0 or 1 philosopher.
@@ -99,11 +99,18 @@ Replace the placeholders with the desired values for the simulation. For example
 ## Testing
 To test the program, you can try different combinations of parameters and observe how the philosophers behave. Pay attention to how they compete for forks and whether they are able to eat without conflicts.
 
+- IMPORTANT: For these tests compile the code only with the flags -Wall -Werror -Wextra -pthread. Since if you add Sanitize or Valgrind it will slow down the times and will not give exact results.
+
 <h3 align="center">BASIC LEVEL TEST </h3>
 SURVIVE:
 
 ```
-./philo 4 410 200 200 10
+./philo 4 410 200 200 10 | grep "is eating" | wc -l
+```
+At least 40 must be obtained.
+```
+cc *.c -fsanitize=thread -g -o philo_sanitize
+./philo_sanitize 4 410 100 100 8
 ```
 DEAD:
 
