@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 11:50:47 by javiersa          #+#    #+#             */
-/*   Updated: 2023/09/29 10:06:38 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:13:23 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ range of unsigned int.") * -1);
 int	parse_data(int narg, char **argv, t_data *data)
 {
 	data->flag = 0;
+	data->n_eats = 0;
 	data->parameters = narg;
 	data->n_philos = ft_atoi_mod(argv[1]);
 	data->time_dead = ft_atoi_mod(argv[2]);
