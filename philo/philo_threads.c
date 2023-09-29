@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:13:26 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 14:09:36 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:24:01 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,15 @@ void	*exception(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	if (philo->data->n_philos == 1)
+	printf_mutex("is thinking.", philo);
+	pthread_mutex_lock(&philo->data->stop_mutex);
+	while (philo->data->stop == 1)
 	{
-		printf_mutex("is thinking.", philo);
-		pthread_mutex_lock(&philo->data->stop_mutex);
-		while (philo->data->stop == 1)
-		{
-			pthread_mutex_unlock(&philo->data->stop_mutex);
-			usleep(1);
-			pthread_mutex_lock(&philo->data->stop_mutex);
-		}
 		pthread_mutex_unlock(&philo->data->stop_mutex);
+		usleep(1);
+		pthread_mutex_lock(&philo->data->stop_mutex);
 	}
+	pthread_mutex_unlock(&philo->data->stop_mutex);
 	pthread_exit(NULL);
 }
 
