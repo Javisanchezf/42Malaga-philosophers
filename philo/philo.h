@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 17:50:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/10 13:34:51 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:03:20 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct data
 	int				time_eat;
 	int				time_sleep;
 	int				n_eats;
-	short int		ends;
+	short int		parameters;
 	short int		stop;
 	long			time_start;
 	pthread_mutex_t	talk;
