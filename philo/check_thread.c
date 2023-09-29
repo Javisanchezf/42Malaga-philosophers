@@ -6,7 +6,7 @@
 /*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:33:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/09/29 10:04:33 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:16:04 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	check_death(int i, t_philos *philo, int *flag)
 			return (0);
 		}
 		pthread_mutex_unlock(&philo->data->stop_mutex);
-		if (philo->data->parameters == 6 && philo[i].n_meals < philo->data->n_eats)
+		if (philo->data->parameters == 6 && \
+philo[i].n_meals < philo->data->n_eats)
 			*(flag) = 1;
 		pthread_mutex_unlock(&philo[i].mutex_eat);
 	}
