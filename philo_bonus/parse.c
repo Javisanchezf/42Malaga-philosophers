@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 11:50:47 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/11 21:44:47 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:06:38 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,16 @@ range of unsigned int.") * -1);
 
 int	parse_data(int narg, char **argv, t_data *data)
 {
-	data->ends = 0;
 	data->flag = 0;
+	data->parameters = narg;
 	data->n_philos = ft_atoi_mod(argv[1]);
 	data->time_dead = ft_atoi_mod(argv[2]);
 	data->time_eat = ft_atoi_mod(argv[3]);
 	data->time_sleep = ft_atoi_mod(argv[4]);
-	if (narg == 6)
-	{
-		data->ends = 1;
+	if (data->parameters == 6)
 		data->n_eats = ft_atoi_mod(argv[5]);
-	}
 	if (data->n_philos < 0 || data->time_dead < 0 \
-	|| data->time_eat < 0 || data->time_sleep < 0)
+	|| data->time_eat < 0 || data->time_sleep < 0 || data->n_eats < 0)
 		return (1);
 	if (data->n_philos == 0)
 		return (ft_error("There is no philosopher."));

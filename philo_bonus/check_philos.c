@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_philos.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javiersa <javiersa@student.42malaga.com>   +#+  +:+       +#+        */
+/*   By: javiersa <javiersa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 19:33:19 by javiersa          #+#    #+#             */
-/*   Updated: 2023/05/12 18:20:38 by javiersa         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:06:52 by javiersa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	check_philos(t_philos *philo)
 	eat = fork();
 	if (eat == 0)
 	{
-		if (philo->data->ends == 1)
+		if (philo->data->parameters == 6)
 			check_eat(philo);
 		exit(EXIT_SUCCESS);
 	}
